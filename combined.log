@@ -1,0 +1,10 @@
+{"level":"info","message":"Server running on port 3000","timestamp":"2025-02-20T19:38:31.594Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2025-02-22T15:40:17.547Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2025-02-22T15:40:23.241Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2025-02-23T05:49:49.699Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2025-02-23T05:51:15.540Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2025-02-23T05:52:41.981Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2025-02-23T05:53:27.030Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2025-02-23T05:53:41.828Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2025-02-23T05:54:13.253Z"}
+{"level":"error","message":"AuthenticationError: Invalid token\n    at authenticateToken (C:\\Users\\muzir\\Desktop\\Ricsa\\src\\middleware\\auth.js:17:10)\n    at Layer.handle [as handle_request] (C:\\Users\\muzir\\Desktop\\Ricsa\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\muzir\\Desktop\\Ricsa\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\muzir\\Desktop\\Ricsa\\node_modules\\express\\lib\\router\\index.js:286:9\n    at Function.process_params (C:\\Users\\muzir\\Desktop\\Ricsa\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (C:\\Users\\muzir\\Desktop\\Ricsa\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at Function.handle (C:\\Users\\muzir\\Desktop\\Ricsa\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (C:\\Users\\muzir\\Desktop\\Ricsa\\node_modules\\express\\lib\\router\\index.js:47:12)\n    at Layer.handle [as handle_request] (C:\\Users\\muzir\\Desktop\\Ricsa\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\muzir\\Desktop\\Ricsa\\node_modules\\express\\lib\\router\\index.js:328:13)","timestamp":"2025-02-23T05:54:21.141Z"}
