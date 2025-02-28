@@ -8,18 +8,46 @@ router.use(authenticateToken);
 
 router.get("/getUserById", async (req, res, next) => {
     const user = req.body;
-try{
-    // let response = await UserController.getUserById(user);
-    // ResponseMessages.Success(res, response);
-    ResponseMessages.Success(res, "User found");
+    console.log("=> getUsersById");
+    try{
+        let response = await UserController.getUserById(user);
+        ResponseMessages.Success(res, response);
 
-}catch(error){
-    ResponseMessages.Error(res, error);
-}
-
+    }catch(error){
+        ResponseMessages.Error(res, error);
+    }
 });
+
+
+router.get("/getUsersByStatus", async (req, res, next) => {
+    const user = req.body;
+    console.log("=> getUsersByStatus");
+    try{
+        let response = await UserController.getUsersByStatus(user);
+        ResponseMessages.Success(res, response[0]);
+
+    }catch(error){
+        ResponseMessages.Error(res, error);
+    }
+});
+
+
+router.get("/getAllUsers", async (req, res, next) => {
+    console.log("=> getAllUsers");
+    try{
+        let response = await UserController.getAllUsers();
+        console.log('res: ',response)
+        ResponseMessages.Success(res,response[0]);
+
+    }catch(error){
+        ResponseMessages.Error(res, error);
+    }
+    });
+
+
 router.post("/createUser", async(req, res, next) => {
     const body = req.body;
+    console.log("=> createUser");
     try{
         let response = await UserController.createUser(body);
         ResponseMessages.Success(res, response);
@@ -27,5 +55,6 @@ router.post("/createUser", async(req, res, next) => {
         ResponseMessages.Error(res, error);
     }
 });
+
 
 module.exports = router;
