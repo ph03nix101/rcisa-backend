@@ -4,9 +4,9 @@ const db = require('../config/database');
 const { AuthenticationError } = require('../utils/errors');
 
 class AuthController {
-  async register(req, res, next) {
+  async register(body) {
     try {
-      const { email, password, name } = req.body;
+      const { email, password, name } = body;
 
       // Check if user already exists
       const [existingUser] = await db.execute(
@@ -18,6 +18,18 @@ class AuthController {
         throw new AuthenticationError('User already exists');
       }
 
+      // Check if user credentials are empty 
+      if (email.length === 0 || password.length === 0 || name.length === 0){
+        throw new AuthenticationError("Name, Email, and Password cannot be empty!")
+      }
+
+      // Check if email characters are valid
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        throw new AuthenticationError("Not a valid email!");
+      }
+
+
       // Hash password
       const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -27,31 +39,33 @@ class AuthController {
         [email, hashedPassword, name]
       );
 
+      // Get user
+      const [users] = await db.execute(
+        'SELECT * FROM users WHERE email = ?',
+        [email]
+      );
+
+      const user = users[0];
+
       const token = jwt.sign(
         { userId: result.insertId },
         process.env.JWT_SECRET,
         { expiresIn: '1h' }
       );
 
-      res.status(201).json({
-        status: 'success',
-        data: {
-          token,
-          user: {
-            id: result.insertId,
-            email,
-            name
-          }
-        }
-      });
+      return {status: "success", 
+        userInfo: {id: user.id, email:user.email, name: user.name}, 
+        token}
+
     } catch (error) {
-      next(error);
+      throw new AuthenticationError(error);
     }
   }
 
-  async login(req, res, next) {
+  async login(body) {
     try {
-      const { email, password } = req.body;
+ 
+      const { email, password } = body;
 
       // Get user
       const [users] = await db.execute(
@@ -59,16 +73,12 @@ class AuthController {
         [email]
       );
 
-      if (!users.length) {
-        throw new AuthenticationError('Invalid credentials');
-      }
-
       const user = users[0];
 
       // Check password
       const isValid = await bcrypt.compare(password, user.password);
 
-      if (!isValid) {
+      if (!users.length || !isValid) {
         throw new AuthenticationError('Invalid credentials');
       }
 
@@ -78,19 +88,12 @@ class AuthController {
         { expiresIn: '1h' }
       );
 
-      res.json({
-        status: 'success',
-        data: {
-          token,
-          user: {
-            id: user.id,
-            email: user.email,
-            name: user.name
-          }
-        }
-      });
-    } catch (error) {
-      next(error);
+      return {status: "success", 
+              userInfo: {id: user.id, email:user.email, name: user.name}, 
+              token}
+
+    } catch (TypeError) {
+      throw new AuthenticationError('Invalid credentials');
     }
   }
 }
