@@ -15,6 +15,12 @@ class UserController {
         return results;
     }
 
+    async getUsersByNullStatus() {
+        const sql = 'SELECT * FROM users WHERE status IS NULL';
+        const results = await connection.execute(sql);
+        return results;
+    }
+
     async getAllUsers() {
         const sql = 'SELECT * FROM users';
         const results = await connection.execute(sql);
