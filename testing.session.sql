@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS users(
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(100) NOT NULL,
+    phone_number VARCHAR(20) NOT NULL,
+    message TEXT NOT NULL,
     status VARCHAR(45)
 );
 
@@ -23,12 +25,12 @@ CREATE TABLE IF NOT EXISTS refresh_tokens(
 
 -- @block
 -- Inserting data into users table
-INSERT INTO users (name, email, password, status)
+INSERT INTO users (name, email, password, phone_number, message, status)
 VALUES  
-    ('Tanaka', 'tanaka@gmail.com', 'mona_1', 'Member'),
-    ('Casper', 'casper@gmail.com', 'masters_2', 'Member'),
-    ('Kgethego', 'kg@gmail.com', 'afri_3', 'Visitor'),
-    ('Shingai', 'shingai@gmail.com', 'nothing_4', 'Member');
+    ('Tanaka', 'tanaka@gmail.com', 'mona_1', '012345', 'I am a member', 'Member'),
+    ('Casper', 'casper@gmail.com', 'masters_2', '0234567', 'I am a member', 'Member'),
+    ('Kgethego', 'kg@gmail.com', 'afri_3', '076543', 'I am a visitor', 'Visitor'),
+    ('Shingai', 'shingai@gmail.com', 'nothing_4', '098765', 'i am a member', 'Member');
 
 
 -- @block
@@ -68,3 +70,7 @@ SELECT * FROM refresh_tokens;
 -- @block
 -- Remove token records
 DELETE FROM refresh_tokens;
+
+-- @block
+-- Delete the refresh_tokens Table
+DROP TABLE refresh_tokens;
