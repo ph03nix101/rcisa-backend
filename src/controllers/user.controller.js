@@ -5,7 +5,6 @@ class UserController {
     async getUserById(userId) {
         const sql = 'SELECT * FROM users WHERE id = ?';
         const results = await connection.execute(sql, [userId]);
-        console.log("results:",results);
         return results[0];
     }
 
@@ -28,8 +27,8 @@ class UserController {
     }
 
     async createUser(userData) {
-        const sql = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';
-        const results = await connection.execute(sql, [userData.name, userData.email, userData.password]);
+        const sql = 'INSERT INTO users (name, email, password, phone_number, message) VALUES (?, ?, ?, ?, ?)';
+        const results = await connection.execute(sql, [userData.name, userData.email, userData.password, userData.phone_number, userData.message]);
         return results.insertId;
     }
 
