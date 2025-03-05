@@ -62,7 +62,7 @@ class AuthController {
     }
   }
 
-  async login(body) {
+  async login(body, res) {
     try {
  
       const { email, password } = body;
@@ -82,19 +82,76 @@ class AuthController {
         throw new AuthenticationError('Invalid credentials');
       }
 
-      const token = jwt.sign(
-        { userId: user.id },
+      const accessToken = jwt.sign(
+        { userId: user.id, email: user.email},
         process.env.JWT_SECRET,
-        { expiresIn: '1h' }
+        { expiresIn: '45s' }
       );
+      const refreshToken = jwt.sign(
+        { userId: user.id }, 
+        process.env.JWT_SECRET,
+        { expiresIn: '3d'}
+      )
 
-      return {status: "success", 
+      await db.execute('INSERT INTO refresh_tokens (user_id, token, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 3 DAY))',
+        [user.id, refreshToken]);
+
+      res.cookie('refreshToken', refreshToken, {httpOnly: true, sameSite: 'strict'}).header('accessToken', accessToken);
+      // body[1].json({ accessToken });
+      console.log("cookie=>",res.cookie.refreshToken)
+      return [{status: "success", 
               userInfo: {id: user.id, email:user.email, name: user.name}, 
-              token}
+              accessToken, refreshToken}, refreshToken]
 
     } catch (TypeError) {
       throw new AuthenticationError('Invalid credentials');
     }
+  }
+
+  async getRefreshTokens(refreshToken, res){
+    try{
+      // Check if refresh token is in the database
+      const [tokens] = await db.execute(
+        'SELECT * FROM refresh_tokens WHERE token = ?', 
+        [refreshToken]);
+
+      if (tokens.length === 0){
+        throw new AuthenticationError('Invalid refresh token'); 
+      }
+
+      jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, user) => {
+        if (err) return new AuthenticationError('Refresh Token is Invalid or Expired.');
+      
+        // Delete old refresh token
+        await db.execute('DELETE FROM refresh_tokens WHERE token = ?', [refreshToken]);
+
+        // Generate new refresh token
+        const newRefreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '3d'});
+
+        await db.query('INSERT INTO refresh_tokens (user_id, token, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 7 DAY))',
+                      [user.id, newRefreshToken]);
+
+        const newAccessToken = jwt.sign(
+          { userId: user.id, email: user.email},
+          process.env.JWT_SECRET,
+          { expiresIn: '45s' }
+        );
+
+        res.cookie('refreshToken', refreshToken, {httpOnly: true, sameSite: 'strict'}).header('accessToken', newAccessToken);
+
+        console.log("newAccessToken=>",newAccessToken)
+        return {status: "success",
+                userId: refreshToken.user_id, 
+                newRefreshToken}
+      });
+    } catch(TypeError){
+      throw new AuthenticationError(TyperError);
+    }
+  }
+  
+  async logout(refreshToken){
+    const sql = 'DELETE FROM refresh_tokens WHERE token = ?';
+    await db.execute(sql, [refreshToken]); 
   }
 }
 
