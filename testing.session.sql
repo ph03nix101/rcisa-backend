@@ -8,6 +8,18 @@ CREATE TABLE IF NOT EXISTS users(
     status VARCHAR(45)
 );
 
+-- @block
+-- Create refresh_token table
+CREATE TABLE IF NOT EXISTS refresh_tokens(
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    token TEXT NOT NULL,
+    expires_at DATETIME NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
 
 -- @block
 -- Inserting data into users table
@@ -42,5 +54,17 @@ CREATE INDEX status_index ON users(status);
 CREATE INDEX email_index ON users(email);
 
 -- @block
--- Remove user recordss
-DELETE FROM users;;
+-- Remove user records
+DELETE FROM users;
+
+-- @block
+-- Delete the users Table
+DROP TABLE users;
+
+-- @block
+-- Get all tokens
+SELECT * FROM refresh_tokens;
+
+-- @block
+-- Remove token records
+DELETE FROM refresh_tokens;
