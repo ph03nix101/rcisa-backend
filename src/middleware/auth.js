@@ -6,6 +6,8 @@ const authenticateToken = async (req, res, next) => {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1];
 
+    console.log("=>", authHeader, token);
+
     if (!token) {
       throw new AuthenticationError('No token provided');
     }
@@ -14,7 +16,12 @@ const authenticateToken = async (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    next(new AuthenticationError('Invalid token'));
+    if (error.name === 'TokenExpiredError'){
+      return next(new AuthenticationError('Token Expired.'));
+    } else if (error.name === 'JsonWebTokenError'){
+      return next(new AuthenticationError('Invalid Token.'));
+    }
+    return next(new AuthenticationError(error));
   }
 };
 
