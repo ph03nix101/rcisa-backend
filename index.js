@@ -6,12 +6,14 @@ const rateLimit = require('express-rate-limit');
 const { errorHandler } = require('./src/middleware/errorHandler');
 const routes = require('./src/routes');
 const logger = require('./src/utils/logger');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
 // Security middleware
 app.use(helmet());
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json({ limit: '10kb' }));
 
 // Rate limiting
