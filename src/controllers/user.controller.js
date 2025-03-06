@@ -27,8 +27,8 @@ class UserController {
     }
 
     async createUser(userData) {
-        const sql = 'INSERT INTO users (name, email, password, phone_number, message) VALUES (?, ?, ?, ?, ?)';
-        const results = await connection.execute(sql, [userData.name, userData.email, userData.password, userData.phone_number, userData.message]);
+        const sql = 'INSERT INTO users (name, email, password, phone_number) VALUES (?, ?, ?, ?, ?)';
+        const results = await connection.execute(sql, [userData.name, userData.email, userData.password, userData.phone_number]);
         return results.insertId;
     }
 
