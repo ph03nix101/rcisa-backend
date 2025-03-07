@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS messages(
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (congregation_id) REFERENCES congregations(id) ON DELETE CASCADE,
+    FOREIGN KEY (congregation_id) REFERENCES congregations(id) ON DELETE CASCADE
 );
 
 
