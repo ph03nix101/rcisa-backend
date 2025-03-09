@@ -10,6 +10,18 @@ CREATE TABLE IF NOT EXISTS users(
     status VARCHAR(45)
 );
 
+-- START REFRESH TOKENS INFO --
+-- @block
+-- Create refresh_token table
+CREATE TABLE IF NOT EXISTS refresh_tokens(
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    token TEXT NOT NULL,
+    expires_at DATETIME NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 
 -- @block
 -- Create visitors table
@@ -62,22 +74,9 @@ DELETE FROM users;
 
 -- @block
 -- Delete the users Table
-DROP TABLE users;
+-- DROP TABLE users;
 
 -- END USERS INFO --
-
-
--- START REFRESH TOKENS INFO --
--- @block
--- Create refresh_token table
-CREATE TABLE IF NOT EXISTS refresh_tokens(
-    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    token TEXT NOT NULL,
-    expires_at DATETIME NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
 
 
 -- @block
@@ -92,7 +91,7 @@ DELETE FROM refresh_tokens;
 
 -- @block
 -- Delete the refresh_tokens Table
-DROP TABLE refresh_tokens;
+-- DROP TABLE refresh_tokens;
 
 -- END REFRESH TOKENS INFO --
 
@@ -125,7 +124,7 @@ DELETE FROM congregations;
 
 -- @block
 -- Delete the congregation Table
-DROP TABLE congregations;
+-- DROP TABLE congregations;
 
 -- END CONGREGATION INFO --
 
