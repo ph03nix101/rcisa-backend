@@ -6,7 +6,7 @@ const { AuthenticationError } = require('../utils/errors');
 class AuthController {
   async register(body) {
     try {
-      const { name, email, password, phone_number } = body;
+      const { name, email, password, phone_number} = body;
 
       // Check if user already exists
       const [existingUser] = await db.execute(

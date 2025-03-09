@@ -1,3 +1,4 @@
+-- START USERS INFO --
 -- @block 
 -- Creating users table
 CREATE TABLE IF NOT EXISTS users(
@@ -9,16 +10,6 @@ CREATE TABLE IF NOT EXISTS users(
     status VARCHAR(45)
 );
 
--- @block
--- Create refresh_token table
-CREATE TABLE IF NOT EXISTS refresh_tokens(
-    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    token TEXT NOT NULL,
-    expires_at DATETIME NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
 
 -- @block
 -- Create visitors table
@@ -53,7 +44,7 @@ WHERE status = 'Visitor';
 
 
 -- @block
--- Get all members
+-- Get all Members
 SELECT * FROM users
 WHERE status = 'Member';
 
@@ -67,3 +58,96 @@ CREATE INDEX email_index ON visitors(email);
 -- @block
 -- Remove user records
 DELETE FROM users;
+
+
+-- @block
+-- Delete the users Table
+DROP TABLE users;
+
+-- END USERS INFO --
+
+
+-- START REFRESH TOKENS INFO --
+-- @block
+-- Create refresh_token table
+CREATE TABLE IF NOT EXISTS refresh_tokens(
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    token TEXT NOT NULL,
+    expires_at DATETIME NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+-- @block
+-- Get all tokens
+SELECT * FROM refresh_tokens;
+
+
+-- @block
+-- Remove token records
+DELETE FROM refresh_tokens;
+
+
+-- @block
+-- Delete the refresh_tokens Table
+DROP TABLE refresh_tokens;
+
+-- END REFRESH TOKENS INFO --
+
+
+-- START CONGREGATION INFO --
+-- @block
+-- Create congregation table
+CREATE TABLE IF NOT EXISTS congregations(
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    congregation TEXT NOT NULL,
+    location TEXT NULL,
+    status ENUM('Active', 'Disbanded') DEFAULT 'active'
+);
+
+-- @block
+-- Create congregation records
+INSERT INTO congregations(congregation) 
+VALUES  ("Pretoria Silverton"), ("Pretoria North"), 
+        ("Durban"), ("Kempton Park"),
+        ("Mamelodi"), ("Polokwane");
+
+-- @block
+-- Get all church congregations
+SELECT * FROM congregations;
+
+
+-- @block
+-- Remove all congregation records
+DELETE FROM congregations;
+
+-- @block
+-- Delete the congregation Table
+DROP TABLE congregations;
+
+-- END CONGREGATION INFO --
+
+
+-- START MESSAGES INFO --
+-- @block
+-- Create messages table
+CREATE TABLE IF NOT EXISTS messages(
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    sender_id INT NOT NULL, 
+    receiver_id INT NULL,
+    congregation_id INT NULL,   
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (congregation_id) REFERENCES congregations(id) ON DELETE CASCADE
+);
+
+
+-- @block
+-- Get all messages
+SELECT * FROM messages;
+
+-- END MESSAGES INFO --
